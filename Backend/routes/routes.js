@@ -1,8 +1,10 @@
+const { videoUpload } = require('../middlewares/videoUpload')
+
 const router = require('express').Router()
 
 
-router.get('/',(req,res)=>{
-    res.send('API')
+router.post('/upload',videoUpload.single('video'), (req,res)=>{
+    res.send({message:'Video Uploaded'})
 })
 
 module.exports = router
