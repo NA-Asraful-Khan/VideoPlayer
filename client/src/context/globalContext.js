@@ -1,8 +1,33 @@
 import React, { useEffect } from 'react'
 
-const rootAPI = "http://localhost:8000/api/"
+const rootAPI = "http://localhost:8000"
 const GlobalContext = React.createContext()
-const reducer = (state,action)=>{
+
+//actions
+const LOADING = 'LOADING'
+const SET_VIDEOS = 'SET_VIDEOS'
+const SET_SELECTED_VIDEO = 'SET_SELECTED_VIDEO'
+
+const reducer = (state, action) => {
+    switch(action.type){
+        case LOADING:
+            return {...state, loading: true}
+        case SET_VIDEOS:
+            return{
+                ...state,
+                loading: false,
+                videos: [
+                    ...action.payload.map((video) => {
+                        return{
+                            ...video,
+                            videoUrl: `${rootAPI}/public/videos/${video.filename}`
+                        }
+                    })
+                ]
+            }
+        default:
+            return state
+    }
 
     return state
 }
@@ -18,10 +43,10 @@ export const GlobalProvider = ({children})=>{
     //get Videos
     const getAllVideos=async()=>{
         try {
-            const res = await fetch(`${rootAPI}videos`)
+            const res = await fetch(`${rootAPI}/api/videos`)
 
             const data = await res.json()
-            console.log(data.videos)
+            dispatch({type:SET_VIDEOS, payload: data.videos})
         } catch (error) {
             
         } 
@@ -32,9 +57,12 @@ export const GlobalProvider = ({children})=>{
     },[])
 
     return (
-        <GlobalContext.Provider value={'Hello'}>
+        <GlobalContext.Provider value={{
+            ...state,
+            getAllVideos
+        }}>
             {children}
-        </GlobalContext.Provider >
+        </GlobalContext.Provider>
     )
 }
 
