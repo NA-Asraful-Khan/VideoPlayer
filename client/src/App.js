@@ -1,20 +1,31 @@
 import { styled } from "styled-components";
 import Video from "./Componants/Video";
-import { useGlobalContext } from "./context/globalContext";
+
 import {BrowserRouter, Routes, Route } from 'react-router-dom';
 import VideoPlayer from "./Componants/VideoPlayer";
+import { useState } from "react";
+import Upload from "./Componants/Upload";
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
-  const g = useGlobalContext();
+  const [modal, setModal]=useState(false)
   return (
     <BrowserRouter>
       <AppStyled className="App">
+        <div className="upload">
+          <button onClick={()=>setModal(true)}>Upload</button>
+        </div>
         <h1>Video Uploader</h1>
+        {modal&& <Upload/>}
         <Routes>
           <Route path='/' element={<Video />} />
           <Route path='/videos/:id' element={<VideoPlayer />} />
         </Routes>
+        {modal && <div className="overlay" onClick={()=> setModal(false)}></div>}
+        <ToastContainer />
       </AppStyled>
     </BrowserRouter>
   );
@@ -44,6 +55,7 @@ const AppStyled = styled.div`
   .upload{
     display: flex;
     justify-content: flex-start;
+    transition: opacity 0.3s ease;
   }
 `;
 

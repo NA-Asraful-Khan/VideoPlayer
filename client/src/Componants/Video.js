@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 
 const Video = () => {
     const {videos} = useGlobalContext();
-    console.log(videos)
   return (
     <VideosStyled>
         <div className="videos-container">
